@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import MangaCard from "./components/MangaCard";
 import { searchManga } from "./services/mangaApi";
 import type { Manga } from "./types/manga";
+import "./App.css";
 
 
 function App() {
@@ -37,7 +38,7 @@ function App() {
 
 
   return (
-    <>
+    <div className="app">
       <h1>Manga Library</h1>
       <input type="text" placeholder="Search manga..." value={query} onChange={(e) => setQuery(e.target.value)} />
 
@@ -48,13 +49,16 @@ function App() {
       {isLoading && <p>Loading manga...</p>}
       {error && <p>{error}</p>}
 
-      {mangaList.map(manga => (
-        <MangaCard
-          key={manga.id}
-          manga={manga}
-        />
-      ))}
-    </>
+      <div className="manga-grid">
+        {mangaList.map(manga => (
+          <MangaCard
+            key={manga.id}
+            manga={manga}
+          />
+        ))}
+      </div>
+      
+    </div>
   )
 }
 
