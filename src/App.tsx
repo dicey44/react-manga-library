@@ -8,6 +8,7 @@ function App() {
   const [mangaList, setMangaList] = useState<Manga[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [query, setQuery] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     async function loadManga() {
@@ -20,12 +21,18 @@ function App() {
   }, []);
 
   async function handleSearch() {
-    setIsLoading(true);
-    const results = await searchManga(query);
+    try {
+      setIsLoading(true);
+      setError("");
 
-    setMangaList(results);
+      const results = await searchManga(query);
 
-    setIsLoading(false)
+      setMangaList(results);
+    } catch (error) {
+      setError("Failed to load manga. Try again.");
+    } finally {
+      setIsLoading(false)
+    }
   }
 
 
@@ -39,6 +46,7 @@ function App() {
       </button>
 
       {isLoading && <p>Loading manga...</p>}
+      {error && <p>{error}</p>}
 
       {mangaList.map(manga => (
         <MangaCard
