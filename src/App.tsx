@@ -1,18 +1,36 @@
+import { useEffect, useState } from "react";
 import MangaCard from "./components/MangaCard";
+import { searchManga } from "./services/mangaApi";
+import type { Manga } from "./types/manga";
+
 
 function App() {
-  const manga = {
-    id: 1,
-    title: "Berserk",
-    imageUrl: "https://placehold.co/200x300",
-    author: "Kentaro Miura",
-    score: 9.5,
-  }
+  const [mangaList, setMangaList] = useState<Manga[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadManga() {
+      const results = await searchManga("naruto");
+      setMangaList(results);
+      setIsLoading(false);
+    }
+
+    loadManga();
+  }, []);
+
 
   return (
     <>
       <h1>Manga Library</h1>
-      <MangaCard manga={manga} />
+
+      {isLoading && <p>Loading manga...</p>}
+
+      {mangaList.map(manga => (
+        <MangaCard
+          key={manga.id}
+          manga={manga}
+        />
+      ))}
     </>
   )
 }
